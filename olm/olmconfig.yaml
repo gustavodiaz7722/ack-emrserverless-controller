@@ -13,7 +13,7 @@ description: |-
   **About Amazon EMR Serverless**
 
 
-  {ADD YOUR DESCRIPTION HERE}
+  Amazon EMR Serverless is a serverless option in Amazon EMR that makes it easy for data analysts and engineers to run open-source big data analytics frameworks without configuring, managing, and scaling clusters or servers. You get all the features and benefits of Amazon EMR without the need for experts to plan and manage clusters.
 
 
   **About the AWS Controllers for Kubernetes**
@@ -37,4 +37,4 @@ maintainers:
   email: "ack-maintainers@amazon.com"
 links:
 - name: Amazon EMR Serverless Developer Resources
-  url: https://aws.amazon.com/EMR Serverless/developer-resources/
+  url: https://docs.aws.amazon.com/emr/latest/EMR-Serverless-UserGuide/emr-serverless.html
