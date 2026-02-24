@@ -1,0 +1,25 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "emr-serverless:CreateApplication",
+                "emr-serverless:GetApplication",
+                "emr-serverless:UpdateApplication",
+                "emr-serverless:DeleteApplication",
+                "emr-serverless:ListApplications",
+                "emr-serverless:StartApplication",
+                "emr-serverless:StopApplication",
+                "emr-serverless:StartJobRun",
+                "emr-serverless:GetJobRun",
+                "emr-serverless:CancelJobRun",
+                "emr-serverless:ListJobRuns",
+                "emr-serverless:TagResource",
+                "emr-serverless:UntagResource",
+                "emr-serverless:ListTagsForResource"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
