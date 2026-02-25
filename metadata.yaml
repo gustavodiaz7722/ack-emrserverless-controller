@@ -1,0 +1,8 @@
+service:
+  full_name: "Amazon EMR Serverless"
+  short_name: "EMRServerless"
+  link: "https://aws.amazon.com/emr/serverless/"
+  documentation: "https://docs.aws.amazon.com/emr/latest/EMR-Serverless-UserGuide/emr-serverless.html"
+api_versions:
+  - api_version: v1alpha1
+    status: available
