@@ -1,0 +1,14 @@
+apiVersion: emrserverless.services.k8s.aws/v1alpha1
+kind: Application
+metadata:
+  name: $APPLICATION_NAME
+spec:
+  name: $APPLICATION_NAME
+  releaseLabel: $RELEASE_LABEL
+  type: $APPLICATION_TYPE
+  clientToken: $CLIENT_TOKEN
+  autoStartConfiguration:
+    enabled: true
+  autoStopConfiguration:
+    enabled: true
+    idleTimeoutMinutes: 15
