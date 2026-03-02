@@ -81,6 +81,20 @@ spec:
                     type: object
                   encryptionKeyARN:
                     type: string
+                  encryptionKeyRef:
+                    description: Reference field for EncryptionKeyARN
+                    properties:
+                      from:
+                        description: |-
+                          AWSResourceReference provides all the values necessary to reference another
+                          k8s resource for finding the identifier(Id/ARN/Name)
+                        properties:
+                          name:
+                            type: string
+                          namespace:
+                            type: string
+                        type: object
+                    type: object
                 type: object
               identityCenterConfiguration:
                 description: |-
@@ -169,6 +183,20 @@ spec:
                         type: boolean
                       encryptionKeyARN:
                         type: string
+                      encryptionKeyRef:
+                        description: Reference field for EncryptionKeyARN
+                        properties:
+                          from:
+                            description: |-
+                              AWSResourceReference provides all the values necessary to reference another
+                              k8s resource for finding the identifier(Id/ARN/Name)
+                            properties:
+                              name:
+                                type: string
+                              namespace:
+                                type: string
+                            type: object
+                        type: object
                       logGroupName:
                         type: string
                       logStreamNamePrefix:
@@ -188,6 +216,20 @@ spec:
                         type: boolean
                       encryptionKeyARN:
                         type: string
+                      encryptionKeyRef:
+                        description: Reference field for EncryptionKeyARN
+                        properties:
+                          from:
+                            description: |-
+                              AWSResourceReference provides all the values necessary to reference another
+                              k8s resource for finding the identifier(Id/ARN/Name)
+                            properties:
+                              name:
+                                type: string
+                              namespace:
+                                type: string
+                            type: object
+                        type: object
                     type: object
                   prometheusMonitoringConfiguration:
                     description: |-
@@ -204,6 +246,20 @@ spec:
                     properties:
                       encryptionKeyARN:
                         type: string
+                      encryptionKeyRef:
+                        description: Reference field for EncryptionKeyARN
+                        properties:
+                          from:
+                            description: |-
+                              AWSResourceReference provides all the values necessary to reference another
+                              k8s resource for finding the identifier(Id/ARN/Name)
+                            properties:
+                              name:
+                                type: string
+                              namespace:
+                                type: string
+                            type: object
+                        type: object
                       logURI:
                         type: string
                     type: object
@@ -221,9 +277,49 @@ spec:
                     items:
                       type: string
                     type: array
+                  securityGroupRefs:
+                    description: Reference field for SecurityGroupIDs
+                    items:
+                      description: "AWSResourceReferenceWrapper provides a wrapper
+                        around *AWSResourceReference\ntype to provide more user friendly
+                        syntax for references using 'from' field\nEx:\nAPIIDRef:\n\n\tfrom:\n\t
+                        \ name: my-api"
+                      properties:
+                        from:
+                          description: |-
+                            AWSResourceReference provides all the values necessary to reference another
+                            k8s resource for finding the identifier(Id/ARN/Name)
+                          properties:
+                            name:
+                              type: string
+                            namespace:
+                              type: string
+                          type: object
+                      type: object
+                    type: array
                   subnetIDs:
                     items:
                       type: string
+                    type: array
+                  subnetRefs:
+                    description: Reference field for SubnetIDs
+                    items:
+                      description: "AWSResourceReferenceWrapper provides a wrapper
+                        around *AWSResourceReference\ntype to provide more user friendly
+                        syntax for references using 'from' field\nEx:\nAPIIDRef:\n\n\tfrom:\n\t
+                        \ name: my-api"
+                      properties:
+                        from:
+                          description: |-
+                            AWSResourceReference provides all the values necessary to reference another
+                            k8s resource for finding the identifier(Id/ARN/Name)
+                          properties:
+                            name:
+                              type: string
+                            namespace:
+                              type: string
+                          type: object
+                      type: object
                     type: array
                 type: object
               releaseLabel:

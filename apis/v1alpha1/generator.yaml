@@ -11,3 +11,39 @@ resources:
             from:
               operation: GetApplication
               path: Application.WorkerTypeSpecifications
+          # KMS Key for disk encryption
+          DiskEncryptionConfiguration.EncryptionKeyARN:
+            references:
+              resource: Key
+              service_name: kms
+              path: Status.ACKResourceMetadata.ARN
+          # KMS Key for CloudWatch logging encryption
+          MonitoringConfiguration.CloudWatchLoggingConfiguration.EncryptionKeyARN:
+            references:
+              resource: Key
+              service_name: kms
+              path: Status.ACKResourceMetadata.ARN
+          # KMS Key for managed persistence monitoring encryption
+          MonitoringConfiguration.ManagedPersistenceMonitoringConfiguration.EncryptionKeyARN:
+            references:
+              resource: Key
+              service_name: kms
+              path: Status.ACKResourceMetadata.ARN
+          # KMS Key for S3 monitoring encryption
+          MonitoringConfiguration.S3MonitoringConfiguration.EncryptionKeyARN:
+            references:
+              resource: Key
+              service_name: kms
+              path: Status.ACKResourceMetadata.ARN
+          # EC2 Security Groups for VPC connectivity
+          NetworkConfiguration.SecurityGroupIDs:
+            references:
+              resource: SecurityGroup
+              service_name: ec2
+              path: Status.ID
+          # EC2 Subnets for VPC connectivity
+          NetworkConfiguration.SubnetIDs:
+            references:
+              resource: Subnet
+              service_name: ec2
+              path: Status.SubnetID

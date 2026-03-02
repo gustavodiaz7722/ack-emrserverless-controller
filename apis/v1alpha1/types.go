@@ -105,11 +105,13 @@ type AutoStopConfig struct {
 // The Amazon CloudWatch configuration for monitoring logs. You can configure
 // your jobs to send log information to CloudWatch.
 type CloudWatchLoggingConfiguration struct {
-	Enabled             *bool                `json:"enabled,omitempty"`
-	EncryptionKeyARN    *string              `json:"encryptionKeyARN,omitempty"`
-	LogGroupName        *string              `json:"logGroupName,omitempty"`
-	LogStreamNamePrefix *string              `json:"logStreamNamePrefix,omitempty"`
-	LogTypes            map[string][]*string `json:"logTypes,omitempty"`
+	Enabled          *bool   `json:"enabled,omitempty"`
+	EncryptionKeyARN *string `json:"encryptionKeyARN,omitempty"`
+	// Reference field for EncryptionKeyARN
+	EncryptionKeyRef    *ackv1alpha1.AWSResourceReferenceWrapper `json:"encryptionKeyRef,omitempty"`
+	LogGroupName        *string                                  `json:"logGroupName,omitempty"`
+	LogStreamNamePrefix *string                                  `json:"logStreamNamePrefix,omitempty"`
+	LogTypes            map[string][]*string                     `json:"logTypes,omitempty"`
 }
 
 // A configuration specification to be used when provisioning an application.
@@ -134,6 +136,8 @@ type ConfigurationOverrides struct {
 type DiskEncryptionConfiguration struct {
 	EncryptionContext map[string]*string `json:"encryptionContext,omitempty"`
 	EncryptionKeyARN  *string            `json:"encryptionKeyARN,omitempty"`
+	// Reference field for EncryptionKeyARN
+	EncryptionKeyRef *ackv1alpha1.AWSResourceReferenceWrapper `json:"encryptionKeyRef,omitempty"`
 }
 
 // The IAM Identity Center Configuration accepts the Identity Center instance
@@ -233,6 +237,8 @@ type JobRunSummary struct {
 type ManagedPersistenceMonitoringConfiguration struct {
 	Enabled          *bool   `json:"enabled,omitempty"`
 	EncryptionKeyARN *string `json:"encryptionKeyARN,omitempty"`
+	// Reference field for EncryptionKeyARN
+	EncryptionKeyRef *ackv1alpha1.AWSResourceReferenceWrapper `json:"encryptionKeyRef,omitempty"`
 }
 
 // The maximum allowed cumulative resources for an application. No new resources
@@ -261,7 +267,11 @@ type MonitoringConfiguration struct {
 // The network configuration for customer VPC connectivity.
 type NetworkConfiguration struct {
 	SecurityGroupIDs []*string `json:"securityGroupIDs,omitempty"`
-	SubnetIDs        []*string `json:"subnetIDs,omitempty"`
+	// Reference field for SecurityGroupIDs
+	SecurityGroupRefs []*ackv1alpha1.AWSResourceReferenceWrapper `json:"securityGroupRefs,omitempty"`
+	SubnetIDs         []*string                                  `json:"subnetIDs,omitempty"`
+	// Reference field for SubnetIDs
+	SubnetRefs []*ackv1alpha1.AWSResourceReferenceWrapper `json:"subnetRefs,omitempty"`
 }
 
 // The monitoring configuration object you can configure to send metrics to
@@ -279,7 +289,9 @@ type RetryPolicy struct {
 // your jobs to send log information to Amazon S3.
 type S3MonitoringConfiguration struct {
 	EncryptionKeyARN *string `json:"encryptionKeyARN,omitempty"`
-	LogURI           *string `json:"logURI,omitempty"`
+	// Reference field for EncryptionKeyARN
+	EncryptionKeyRef *ackv1alpha1.AWSResourceReferenceWrapper `json:"encryptionKeyRef,omitempty"`
+	LogURI           *string                                  `json:"logURI,omitempty"`
 }
 
 // The scheduler configuration for batch and streaming jobs running on this
