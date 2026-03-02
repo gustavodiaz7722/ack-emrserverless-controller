@@ -6,7 +6,40 @@ sdk_names:
   model_name: emr-serverless
 resources:
   Application:
+      synced:
+        when:
+          - path: Status.State
+            in:
+              - CREATED
+              - STARTED
+              - STOPPED
       fields:
+          Name:
+            is_primary_key: true
+          # Fix type_ -> type for the application type field (Spark, Hive, etc.)
+          Type:
+            go_tag: json:"type,omitempty"
+          # Status fields from GetApplication output
+          State:
+            is_read_only: true
+            from:
+              operation: GetApplication
+              path: Application.State
+          StateDetails:
+            is_read_only: true
+            from:
+              operation: GetApplication
+              path: Application.StateDetails
+          CreatedAt:
+            is_read_only: true
+            from:
+              operation: GetApplication
+              path: Application.CreatedAt
+          UpdatedAt:
+            is_read_only: true
+            from:
+              operation: GetApplication
+              path: Application.UpdatedAt
           WorkerTypeSpecifications:
             from:
               operation: GetApplication
@@ -47,3 +80,22 @@ resources:
               resource: Subnet
               service_name: ec2
               path: Status.SubnetID
+      renames:
+        operations:
+          # Simplify ApplicationID to ID in responses
+          CreateApplication:
+            output_fields:
+              ApplicationId: ID
+          GetApplication:
+            input_fields:
+              ApplicationId: ID
+            output_fields:
+              ApplicationId: ID
+          UpdateApplication:
+            input_fields:
+              ApplicationId: ID
+            output_fields:
+              ApplicationId: ID
+          DeleteApplication:
+            input_fields:
+              ApplicationId: ID

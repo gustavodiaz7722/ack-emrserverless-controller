@@ -92,9 +92,9 @@ func (rm *resourceManager) sdkFind(
 	ko := r.ko.DeepCopy()
 
 	if resp.Application.ApplicationId != nil {
-		ko.Status.ApplicationID = resp.Application.ApplicationId
+		ko.Status.ID = resp.Application.ApplicationId
 	} else {
-		ko.Status.ApplicationID = nil
+		ko.Status.ID = nil
 	}
 	if resp.Application.Architecture != "" {
 		ko.Spec.Architecture = aws.String(string(resp.Application.Architecture))
@@ -129,6 +129,11 @@ func (rm *resourceManager) sdkFind(
 		ko.Spec.AutoStopConfiguration = f4
 	} else {
 		ko.Spec.AutoStopConfiguration = nil
+	}
+	if resp.Application.CreatedAt != nil {
+		ko.Status.CreatedAt = &metav1.Time{*resp.Application.CreatedAt}
+	} else {
+		ko.Status.CreatedAt = nil
 	}
 	if resp.Application.DiskEncryptionConfiguration != nil {
 		f6 := &svcapitypes.DiskEncryptionConfiguration{}
@@ -336,6 +341,16 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.SchedulerConfiguration = nil
 	}
+	if resp.Application.State != "" {
+		ko.Status.State = aws.String(string(resp.Application.State))
+	} else {
+		ko.Status.State = nil
+	}
+	if resp.Application.StateDetails != nil {
+		ko.Status.StateDetails = resp.Application.StateDetails
+	} else {
+		ko.Status.StateDetails = nil
+	}
 	if resp.Application.Tags != nil {
 		ko.Spec.Tags = aws.StringMap(resp.Application.Tags)
 	} else {
@@ -345,6 +360,11 @@ func (rm *resourceManager) sdkFind(
 		ko.Spec.Type = resp.Application.Type
 	} else {
 		ko.Spec.Type = nil
+	}
+	if resp.Application.UpdatedAt != nil {
+		ko.Status.UpdatedAt = &metav1.Time{*resp.Application.UpdatedAt}
+	} else {
+		ko.Status.UpdatedAt = nil
 	}
 	if resp.Application.WorkerTypeSpecifications != nil {
 		f24 := map[string]*svcapitypes.WorkerTypeSpecification{}
@@ -377,7 +397,7 @@ func (rm *resourceManager) sdkFind(
 func (rm *resourceManager) requiredFieldsMissingFromReadOneInput(
 	r *resource,
 ) bool {
-	return r.ko.Status.ApplicationID == nil
+	return r.ko.Status.ID == nil
 
 }
 
@@ -388,8 +408,8 @@ func (rm *resourceManager) newDescribeRequestPayload(
 ) (*svcsdk.GetApplicationInput, error) {
 	res := &svcsdk.GetApplicationInput{}
 
-	if r.ko.Status.ApplicationID != nil {
-		res.ApplicationId = r.ko.Status.ApplicationID
+	if r.ko.Status.ID != nil {
+		res.ApplicationId = r.ko.Status.ID
 	}
 
 	return res, nil
@@ -424,9 +444,9 @@ func (rm *resourceManager) sdkCreate(
 	ko := desired.ko.DeepCopy()
 
 	if resp.ApplicationId != nil {
-		ko.Status.ApplicationID = resp.ApplicationId
+		ko.Status.ID = resp.ApplicationId
 	} else {
-		ko.Status.ApplicationID = nil
+		ko.Status.ID = nil
 	}
 	if ko.Status.ACKResourceMetadata == nil {
 		ko.Status.ACKResourceMetadata = &ackv1alpha1.ResourceMetadata{}
@@ -724,9 +744,9 @@ func (rm *resourceManager) sdkUpdate(
 	ko := desired.ko.DeepCopy()
 
 	if resp.Application.ApplicationId != nil {
-		ko.Status.ApplicationID = resp.Application.ApplicationId
+		ko.Status.ID = resp.Application.ApplicationId
 	} else {
-		ko.Status.ApplicationID = nil
+		ko.Status.ID = nil
 	}
 	if resp.Application.Architecture != "" {
 		ko.Spec.Architecture = aws.String(string(resp.Application.Architecture))
@@ -761,6 +781,11 @@ func (rm *resourceManager) sdkUpdate(
 		ko.Spec.AutoStopConfiguration = f4
 	} else {
 		ko.Spec.AutoStopConfiguration = nil
+	}
+	if resp.Application.CreatedAt != nil {
+		ko.Status.CreatedAt = &metav1.Time{*resp.Application.CreatedAt}
+	} else {
+		ko.Status.CreatedAt = nil
 	}
 	if resp.Application.DiskEncryptionConfiguration != nil {
 		f6 := &svcapitypes.DiskEncryptionConfiguration{}
@@ -968,6 +993,16 @@ func (rm *resourceManager) sdkUpdate(
 	} else {
 		ko.Spec.SchedulerConfiguration = nil
 	}
+	if resp.Application.State != "" {
+		ko.Status.State = aws.String(string(resp.Application.State))
+	} else {
+		ko.Status.State = nil
+	}
+	if resp.Application.StateDetails != nil {
+		ko.Status.StateDetails = resp.Application.StateDetails
+	} else {
+		ko.Status.StateDetails = nil
+	}
 	if resp.Application.Tags != nil {
 		ko.Spec.Tags = aws.StringMap(resp.Application.Tags)
 	} else {
@@ -977,6 +1012,11 @@ func (rm *resourceManager) sdkUpdate(
 		ko.Spec.Type = resp.Application.Type
 	} else {
 		ko.Spec.Type = nil
+	}
+	if resp.Application.UpdatedAt != nil {
+		ko.Status.UpdatedAt = &metav1.Time{*resp.Application.UpdatedAt}
+	} else {
+		ko.Status.UpdatedAt = nil
 	}
 	if resp.Application.WorkerTypeSpecifications != nil {
 		f24 := map[string]*svcapitypes.WorkerTypeSpecification{}
@@ -1012,8 +1052,8 @@ func (rm *resourceManager) newUpdateRequestPayload(
 ) (*svcsdk.UpdateApplicationInput, error) {
 	res := &svcsdk.UpdateApplicationInput{}
 
-	if r.ko.Status.ApplicationID != nil {
-		res.ApplicationId = r.ko.Status.ApplicationID
+	if r.ko.Status.ID != nil {
+		res.ApplicationId = r.ko.Status.ID
 	}
 	if r.ko.Spec.Architecture != nil {
 		res.Architecture = svcsdktypes.Architecture(*r.ko.Spec.Architecture)
@@ -1275,8 +1315,8 @@ func (rm *resourceManager) newDeleteRequestPayload(
 ) (*svcsdk.DeleteApplicationInput, error) {
 	res := &svcsdk.DeleteApplicationInput{}
 
-	if r.ko.Status.ApplicationID != nil {
-		res.ApplicationId = r.ko.Status.ApplicationID
+	if r.ko.Status.ID != nil {
+		res.ApplicationId = r.ko.Status.ID
 	}
 
 	return res, nil

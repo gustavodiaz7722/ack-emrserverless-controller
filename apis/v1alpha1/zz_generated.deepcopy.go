@@ -256,10 +256,28 @@ func (in *ApplicationStatus) DeepCopyInto(out *ApplicationStatus) {
 			}
 		}
 	}
-	if in.ApplicationID != nil {
-		in, out := &in.ApplicationID, &out.ApplicationID
+	if in.CreatedAt != nil {
+		in, out := &in.CreatedAt, &out.CreatedAt
+		*out = (*in).DeepCopy()
+	}
+	if in.ID != nil {
+		in, out := &in.ID, &out.ID
 		*out = new(string)
 		**out = **in
+	}
+	if in.State != nil {
+		in, out := &in.State, &out.State
+		*out = new(string)
+		**out = **in
+	}
+	if in.StateDetails != nil {
+		in, out := &in.StateDetails, &out.StateDetails
+		*out = new(string)
+		**out = **in
+	}
+	if in.UpdatedAt != nil {
+		in, out := &in.UpdatedAt, &out.UpdatedAt
+		*out = (*in).DeepCopy()
 	}
 }
 

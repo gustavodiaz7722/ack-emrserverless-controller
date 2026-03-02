@@ -86,7 +86,7 @@ type ApplicationSpec struct {
 	Tags map[string]*string `json:"tags,omitempty"`
 	// The type of application you want to start, such as Spark or Hive.
 	// +kubebuilder:validation:Required
-	Type *string `json:"type_"`
+	Type *string `json:"type,omitempty"`
 	// The specification applied to each worker type.
 	WorkerTypeSpecifications map[string]*WorkerTypeSpecification `json:"workerTypeSpecifications,omitempty"`
 }
@@ -104,11 +104,25 @@ type ApplicationStatus struct {
 	// resource
 	// +kubebuilder:validation:Optional
 	Conditions []*ackv1alpha1.Condition `json:"conditions"`
+	// The date and time when the application run was created.
+	// +kubebuilder:validation:Optional
+	CreatedAt *metav1.Time `json:"createdAt,omitempty"`
 	// The output contains the application ID.
 	//
 	// Regex Pattern: `^[0-9a-z]+$`
 	// +kubebuilder:validation:Optional
-	ApplicationID *string `json:"applicationID,omitempty"`
+	ID *string `json:"id,omitempty"`
+	// The state of the application.
+	// +kubebuilder:validation:Optional
+	State *string `json:"state,omitempty"`
+	// The state details of the application.
+	//
+	// Regex Pattern: `.*\S.*`
+	// +kubebuilder:validation:Optional
+	StateDetails *string `json:"stateDetails,omitempty"`
+	// The date and time when the application run was last updated.
+	// +kubebuilder:validation:Optional
+	UpdatedAt *metav1.Time `json:"updatedAt,omitempty"`
 }
 
 // Application is the Schema for the Applications API
