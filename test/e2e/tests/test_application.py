@@ -102,7 +102,6 @@ class TestApplication:
         # Verify basic properties
         assert app["applicationId"] == application_id
         assert app["name"] == cr["spec"]["name"]
-        assert app["type"] == cr["spec"]["type"]
         assert app["releaseLabel"] == cr["spec"]["releaseLabel"]
         
         # Verify state is one of the expected synced states

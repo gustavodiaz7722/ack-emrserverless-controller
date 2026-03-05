@@ -388,14 +388,6 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	rm.setStatusDefaults(ko)
-
-	if ko.Status.ACKResourceMetadata != nil && ko.Status.ACKResourceMetadata.ARN != nil {
-		tags := rm.getTags(ctx, string(*ko.Status.ACKResourceMetadata.ARN))
-		if tags != nil {
-			ko.Spec.Tags = tags
-		}
-	}
-
 	return &resource{ko}, nil
 }
 
@@ -470,11 +462,6 @@ func (rm *resourceManager) sdkCreate(
 	}
 
 	rm.setStatusDefaults(ko)
-
-	if ko.Spec.Tags != nil {
-		ackcondition.SetSynced(&resource{ko}, corev1.ConditionFalse, nil, nil)
-	}
-
 	return &resource{ko}, nil
 }
 
@@ -512,182 +499,182 @@ func (rm *resourceManager) newCreateRequestPayload(
 		res.AutoStopConfiguration = f2
 	}
 	if r.ko.Spec.DiskEncryptionConfiguration != nil {
-		f4 := &svcsdktypes.DiskEncryptionConfiguration{}
+		f3 := &svcsdktypes.DiskEncryptionConfiguration{}
 		if r.ko.Spec.DiskEncryptionConfiguration.EncryptionContext != nil {
-			f4.EncryptionContext = aws.ToStringMap(r.ko.Spec.DiskEncryptionConfiguration.EncryptionContext)
+			f3.EncryptionContext = aws.ToStringMap(r.ko.Spec.DiskEncryptionConfiguration.EncryptionContext)
 		}
 		if r.ko.Spec.DiskEncryptionConfiguration.EncryptionKeyARN != nil {
-			f4.EncryptionKeyArn = r.ko.Spec.DiskEncryptionConfiguration.EncryptionKeyARN
+			f3.EncryptionKeyArn = r.ko.Spec.DiskEncryptionConfiguration.EncryptionKeyARN
 		}
-		res.DiskEncryptionConfiguration = f4
+		res.DiskEncryptionConfiguration = f3
 	}
 	if r.ko.Spec.IdentityCenterConfiguration != nil {
-		f5 := &svcsdktypes.IdentityCenterConfigurationInput{}
+		f4 := &svcsdktypes.IdentityCenterConfigurationInput{}
 		if r.ko.Spec.IdentityCenterConfiguration.IdentityCenterInstanceARN != nil {
-			f5.IdentityCenterInstanceArn = r.ko.Spec.IdentityCenterConfiguration.IdentityCenterInstanceARN
+			f4.IdentityCenterInstanceArn = r.ko.Spec.IdentityCenterConfiguration.IdentityCenterInstanceARN
 		}
 		if r.ko.Spec.IdentityCenterConfiguration.UserBackgroundSessionsEnabled != nil {
-			f5.UserBackgroundSessionsEnabled = r.ko.Spec.IdentityCenterConfiguration.UserBackgroundSessionsEnabled
+			f4.UserBackgroundSessionsEnabled = r.ko.Spec.IdentityCenterConfiguration.UserBackgroundSessionsEnabled
 		}
-		res.IdentityCenterConfiguration = f5
+		res.IdentityCenterConfiguration = f4
 	}
 	if r.ko.Spec.ImageConfiguration != nil {
-		f6 := &svcsdktypes.ImageConfigurationInput{}
+		f5 := &svcsdktypes.ImageConfigurationInput{}
 		if r.ko.Spec.ImageConfiguration.ImageURI != nil {
-			f6.ImageUri = r.ko.Spec.ImageConfiguration.ImageURI
+			f5.ImageUri = r.ko.Spec.ImageConfiguration.ImageURI
 		}
-		res.ImageConfiguration = f6
+		res.ImageConfiguration = f5
 	}
 	if r.ko.Spec.InitialCapacity != nil {
-		f7 := map[string]svcsdktypes.InitialCapacityConfig{}
-		for f7key, f7valiter := range r.ko.Spec.InitialCapacity {
-			f7val := &svcsdktypes.InitialCapacityConfig{}
-			if f7valiter.WorkerConfiguration != nil {
-				f7valf0 := &svcsdktypes.WorkerResourceConfig{}
-				if f7valiter.WorkerConfiguration.CPU != nil {
-					f7valf0.Cpu = f7valiter.WorkerConfiguration.CPU
+		f6 := map[string]svcsdktypes.InitialCapacityConfig{}
+		for f6key, f6valiter := range r.ko.Spec.InitialCapacity {
+			f6val := &svcsdktypes.InitialCapacityConfig{}
+			if f6valiter.WorkerConfiguration != nil {
+				f6valf0 := &svcsdktypes.WorkerResourceConfig{}
+				if f6valiter.WorkerConfiguration.CPU != nil {
+					f6valf0.Cpu = f6valiter.WorkerConfiguration.CPU
 				}
-				if f7valiter.WorkerConfiguration.Disk != nil {
-					f7valf0.Disk = f7valiter.WorkerConfiguration.Disk
+				if f6valiter.WorkerConfiguration.Disk != nil {
+					f6valf0.Disk = f6valiter.WorkerConfiguration.Disk
 				}
-				if f7valiter.WorkerConfiguration.DiskType != nil {
-					f7valf0.DiskType = f7valiter.WorkerConfiguration.DiskType
+				if f6valiter.WorkerConfiguration.DiskType != nil {
+					f6valf0.DiskType = f6valiter.WorkerConfiguration.DiskType
 				}
-				if f7valiter.WorkerConfiguration.Memory != nil {
-					f7valf0.Memory = f7valiter.WorkerConfiguration.Memory
+				if f6valiter.WorkerConfiguration.Memory != nil {
+					f6valf0.Memory = f6valiter.WorkerConfiguration.Memory
 				}
-				f7val.WorkerConfiguration = f7valf0
+				f6val.WorkerConfiguration = f6valf0
 			}
-			if f7valiter.WorkerCount != nil {
-				f7val.WorkerCount = f7valiter.WorkerCount
+			if f6valiter.WorkerCount != nil {
+				f6val.WorkerCount = f6valiter.WorkerCount
 			}
-			f7[f7key] = *f7val
+			f6[f6key] = *f6val
 		}
-		res.InitialCapacity = f7
+		res.InitialCapacity = f6
 	}
 	if r.ko.Spec.InteractiveConfiguration != nil {
-		f8 := &svcsdktypes.InteractiveConfiguration{}
+		f7 := &svcsdktypes.InteractiveConfiguration{}
 		if r.ko.Spec.InteractiveConfiguration.LivyEndpointEnabled != nil {
-			f8.LivyEndpointEnabled = r.ko.Spec.InteractiveConfiguration.LivyEndpointEnabled
+			f7.LivyEndpointEnabled = r.ko.Spec.InteractiveConfiguration.LivyEndpointEnabled
 		}
 		if r.ko.Spec.InteractiveConfiguration.StudioEnabled != nil {
-			f8.StudioEnabled = r.ko.Spec.InteractiveConfiguration.StudioEnabled
+			f7.StudioEnabled = r.ko.Spec.InteractiveConfiguration.StudioEnabled
 		}
-		res.InteractiveConfiguration = f8
+		res.InteractiveConfiguration = f7
 	}
 	if r.ko.Spec.JobLevelCostAllocationConfiguration != nil {
-		f9 := &svcsdktypes.JobLevelCostAllocationConfiguration{}
+		f8 := &svcsdktypes.JobLevelCostAllocationConfiguration{}
 		if r.ko.Spec.JobLevelCostAllocationConfiguration.Enabled != nil {
-			f9.Enabled = r.ko.Spec.JobLevelCostAllocationConfiguration.Enabled
+			f8.Enabled = r.ko.Spec.JobLevelCostAllocationConfiguration.Enabled
 		}
-		res.JobLevelCostAllocationConfiguration = f9
+		res.JobLevelCostAllocationConfiguration = f8
 	}
 	if r.ko.Spec.MaximumCapacity != nil {
-		f10 := &svcsdktypes.MaximumAllowedResources{}
+		f9 := &svcsdktypes.MaximumAllowedResources{}
 		if r.ko.Spec.MaximumCapacity.CPU != nil {
-			f10.Cpu = r.ko.Spec.MaximumCapacity.CPU
+			f9.Cpu = r.ko.Spec.MaximumCapacity.CPU
 		}
 		if r.ko.Spec.MaximumCapacity.Disk != nil {
-			f10.Disk = r.ko.Spec.MaximumCapacity.Disk
+			f9.Disk = r.ko.Spec.MaximumCapacity.Disk
 		}
 		if r.ko.Spec.MaximumCapacity.Memory != nil {
-			f10.Memory = r.ko.Spec.MaximumCapacity.Memory
+			f9.Memory = r.ko.Spec.MaximumCapacity.Memory
 		}
-		res.MaximumCapacity = f10
+		res.MaximumCapacity = f9
 	}
 	if r.ko.Spec.MonitoringConfiguration != nil {
-		f11 := &svcsdktypes.MonitoringConfiguration{}
+		f10 := &svcsdktypes.MonitoringConfiguration{}
 		if r.ko.Spec.MonitoringConfiguration.CloudWatchLoggingConfiguration != nil {
-			f11f0 := &svcsdktypes.CloudWatchLoggingConfiguration{}
+			f10f0 := &svcsdktypes.CloudWatchLoggingConfiguration{}
 			if r.ko.Spec.MonitoringConfiguration.CloudWatchLoggingConfiguration.Enabled != nil {
-				f11f0.Enabled = r.ko.Spec.MonitoringConfiguration.CloudWatchLoggingConfiguration.Enabled
+				f10f0.Enabled = r.ko.Spec.MonitoringConfiguration.CloudWatchLoggingConfiguration.Enabled
 			}
 			if r.ko.Spec.MonitoringConfiguration.CloudWatchLoggingConfiguration.EncryptionKeyARN != nil {
-				f11f0.EncryptionKeyArn = r.ko.Spec.MonitoringConfiguration.CloudWatchLoggingConfiguration.EncryptionKeyARN
+				f10f0.EncryptionKeyArn = r.ko.Spec.MonitoringConfiguration.CloudWatchLoggingConfiguration.EncryptionKeyARN
 			}
 			if r.ko.Spec.MonitoringConfiguration.CloudWatchLoggingConfiguration.LogGroupName != nil {
-				f11f0.LogGroupName = r.ko.Spec.MonitoringConfiguration.CloudWatchLoggingConfiguration.LogGroupName
+				f10f0.LogGroupName = r.ko.Spec.MonitoringConfiguration.CloudWatchLoggingConfiguration.LogGroupName
 			}
 			if r.ko.Spec.MonitoringConfiguration.CloudWatchLoggingConfiguration.LogStreamNamePrefix != nil {
-				f11f0.LogStreamNamePrefix = r.ko.Spec.MonitoringConfiguration.CloudWatchLoggingConfiguration.LogStreamNamePrefix
+				f10f0.LogStreamNamePrefix = r.ko.Spec.MonitoringConfiguration.CloudWatchLoggingConfiguration.LogStreamNamePrefix
 			}
 			if r.ko.Spec.MonitoringConfiguration.CloudWatchLoggingConfiguration.LogTypes != nil {
-				f11f0f4 := map[string][]string{}
-				for f11f0f4key, f11f0f4valiter := range r.ko.Spec.MonitoringConfiguration.CloudWatchLoggingConfiguration.LogTypes {
-					f11f0f4[f11f0f4key] = aws.ToStringSlice(f11f0f4valiter)
+				f10f0f4 := map[string][]string{}
+				for f10f0f4key, f10f0f4valiter := range r.ko.Spec.MonitoringConfiguration.CloudWatchLoggingConfiguration.LogTypes {
+					f10f0f4[f10f0f4key] = aws.ToStringSlice(f10f0f4valiter)
 				}
-				f11f0.LogTypes = f11f0f4
+				f10f0.LogTypes = f10f0f4
 			}
-			f11.CloudWatchLoggingConfiguration = f11f0
+			f10.CloudWatchLoggingConfiguration = f10f0
 		}
 		if r.ko.Spec.MonitoringConfiguration.ManagedPersistenceMonitoringConfiguration != nil {
-			f11f1 := &svcsdktypes.ManagedPersistenceMonitoringConfiguration{}
+			f10f1 := &svcsdktypes.ManagedPersistenceMonitoringConfiguration{}
 			if r.ko.Spec.MonitoringConfiguration.ManagedPersistenceMonitoringConfiguration.Enabled != nil {
-				f11f1.Enabled = r.ko.Spec.MonitoringConfiguration.ManagedPersistenceMonitoringConfiguration.Enabled
+				f10f1.Enabled = r.ko.Spec.MonitoringConfiguration.ManagedPersistenceMonitoringConfiguration.Enabled
 			}
 			if r.ko.Spec.MonitoringConfiguration.ManagedPersistenceMonitoringConfiguration.EncryptionKeyARN != nil {
-				f11f1.EncryptionKeyArn = r.ko.Spec.MonitoringConfiguration.ManagedPersistenceMonitoringConfiguration.EncryptionKeyARN
+				f10f1.EncryptionKeyArn = r.ko.Spec.MonitoringConfiguration.ManagedPersistenceMonitoringConfiguration.EncryptionKeyARN
 			}
-			f11.ManagedPersistenceMonitoringConfiguration = f11f1
+			f10.ManagedPersistenceMonitoringConfiguration = f10f1
 		}
 		if r.ko.Spec.MonitoringConfiguration.PrometheusMonitoringConfiguration != nil {
-			f11f2 := &svcsdktypes.PrometheusMonitoringConfiguration{}
+			f10f2 := &svcsdktypes.PrometheusMonitoringConfiguration{}
 			if r.ko.Spec.MonitoringConfiguration.PrometheusMonitoringConfiguration.RemoteWriteURL != nil {
-				f11f2.RemoteWriteUrl = r.ko.Spec.MonitoringConfiguration.PrometheusMonitoringConfiguration.RemoteWriteURL
+				f10f2.RemoteWriteUrl = r.ko.Spec.MonitoringConfiguration.PrometheusMonitoringConfiguration.RemoteWriteURL
 			}
-			f11.PrometheusMonitoringConfiguration = f11f2
+			f10.PrometheusMonitoringConfiguration = f10f2
 		}
 		if r.ko.Spec.MonitoringConfiguration.S3MonitoringConfiguration != nil {
-			f11f3 := &svcsdktypes.S3MonitoringConfiguration{}
+			f10f3 := &svcsdktypes.S3MonitoringConfiguration{}
 			if r.ko.Spec.MonitoringConfiguration.S3MonitoringConfiguration.EncryptionKeyARN != nil {
-				f11f3.EncryptionKeyArn = r.ko.Spec.MonitoringConfiguration.S3MonitoringConfiguration.EncryptionKeyARN
+				f10f3.EncryptionKeyArn = r.ko.Spec.MonitoringConfiguration.S3MonitoringConfiguration.EncryptionKeyARN
 			}
 			if r.ko.Spec.MonitoringConfiguration.S3MonitoringConfiguration.LogURI != nil {
-				f11f3.LogUri = r.ko.Spec.MonitoringConfiguration.S3MonitoringConfiguration.LogURI
+				f10f3.LogUri = r.ko.Spec.MonitoringConfiguration.S3MonitoringConfiguration.LogURI
 			}
-			f11.S3MonitoringConfiguration = f11f3
+			f10.S3MonitoringConfiguration = f10f3
 		}
-		res.MonitoringConfiguration = f11
+		res.MonitoringConfiguration = f10
 	}
 	if r.ko.Spec.Name != nil {
 		res.Name = r.ko.Spec.Name
 	}
 	if r.ko.Spec.NetworkConfiguration != nil {
-		f13 := &svcsdktypes.NetworkConfiguration{}
+		f12 := &svcsdktypes.NetworkConfiguration{}
 		if r.ko.Spec.NetworkConfiguration.SecurityGroupIDs != nil {
-			f13.SecurityGroupIds = aws.ToStringSlice(r.ko.Spec.NetworkConfiguration.SecurityGroupIDs)
+			f12.SecurityGroupIds = aws.ToStringSlice(r.ko.Spec.NetworkConfiguration.SecurityGroupIDs)
 		}
 		if r.ko.Spec.NetworkConfiguration.SubnetIDs != nil {
-			f13.SubnetIds = aws.ToStringSlice(r.ko.Spec.NetworkConfiguration.SubnetIDs)
+			f12.SubnetIds = aws.ToStringSlice(r.ko.Spec.NetworkConfiguration.SubnetIDs)
 		}
-		res.NetworkConfiguration = f13
+		res.NetworkConfiguration = f12
 	}
 	if r.ko.Spec.ReleaseLabel != nil {
 		res.ReleaseLabel = r.ko.Spec.ReleaseLabel
 	}
 	if r.ko.Spec.RuntimeConfiguration != nil {
-		f15 := []svcsdktypes.Configuration{}
-		for _, f15iter := range r.ko.Spec.RuntimeConfiguration {
-			f15elem := &svcsdktypes.Configuration{}
-			if f15iter.Classification != nil {
-				f15elem.Classification = f15iter.Classification
+		f14 := []svcsdktypes.Configuration{}
+		for _, f14iter := range r.ko.Spec.RuntimeConfiguration {
+			f14elem := &svcsdktypes.Configuration{}
+			if f14iter.Classification != nil {
+				f14elem.Classification = f14iter.Classification
 			}
-			if f15iter.Properties != nil {
-				f15elem.Properties = aws.ToStringMap(f15iter.Properties)
+			if f14iter.Properties != nil {
+				f14elem.Properties = aws.ToStringMap(f14iter.Properties)
 			}
-			f15 = append(f15, *f15elem)
+			f14 = append(f14, *f14elem)
 		}
-		res.RuntimeConfiguration = f15
+		res.RuntimeConfiguration = f14
 	}
 	if r.ko.Spec.SchedulerConfiguration != nil {
-		f16 := &svcsdktypes.SchedulerConfiguration{}
+		f15 := &svcsdktypes.SchedulerConfiguration{}
 		if r.ko.Spec.SchedulerConfiguration.MaxConcurrentRuns != nil {
 			maxConcurrentRunsCopy0 := *r.ko.Spec.SchedulerConfiguration.MaxConcurrentRuns
 			if maxConcurrentRunsCopy0 > math.MaxInt32 || maxConcurrentRunsCopy0 < math.MinInt32 {
 				return nil, fmt.Errorf("error: field maxConcurrentRuns is of type int32")
 			}
 			maxConcurrentRunsCopy := int32(maxConcurrentRunsCopy0)
-			f16.MaxConcurrentRuns = &maxConcurrentRunsCopy
+			f15.MaxConcurrentRuns = &maxConcurrentRunsCopy
 		}
 		if r.ko.Spec.SchedulerConfiguration.QueueTimeoutMinutes != nil {
 			queueTimeoutMinutesCopy0 := *r.ko.Spec.SchedulerConfiguration.QueueTimeoutMinutes
@@ -695,9 +682,9 @@ func (rm *resourceManager) newCreateRequestPayload(
 				return nil, fmt.Errorf("error: field queueTimeoutMinutes is of type int32")
 			}
 			queueTimeoutMinutesCopy := int32(queueTimeoutMinutesCopy0)
-			f16.QueueTimeoutMinutes = &queueTimeoutMinutesCopy
+			f15.QueueTimeoutMinutes = &queueTimeoutMinutesCopy
 		}
-		res.SchedulerConfiguration = f16
+		res.SchedulerConfiguration = f15
 	}
 	if r.ko.Spec.Tags != nil {
 		res.Tags = aws.ToStringMap(r.ko.Spec.Tags)
@@ -706,19 +693,19 @@ func (rm *resourceManager) newCreateRequestPayload(
 		res.Type = r.ko.Spec.Type
 	}
 	if r.ko.Spec.WorkerTypeSpecifications != nil {
-		f19 := map[string]svcsdktypes.WorkerTypeSpecificationInput{}
-		for f19key, f19valiter := range r.ko.Spec.WorkerTypeSpecifications {
-			f19val := &svcsdktypes.WorkerTypeSpecificationInput{}
-			if f19valiter.ImageConfiguration != nil {
-				f19valf0 := &svcsdktypes.ImageConfigurationInput{}
-				if f19valiter.ImageConfiguration.ImageURI != nil {
-					f19valf0.ImageUri = f19valiter.ImageConfiguration.ImageURI
+		f18 := map[string]svcsdktypes.WorkerTypeSpecificationInput{}
+		for f18key, f18valiter := range r.ko.Spec.WorkerTypeSpecifications {
+			f18val := &svcsdktypes.WorkerTypeSpecificationInput{}
+			if f18valiter.ImageConfiguration != nil {
+				f18valf0 := &svcsdktypes.ImageConfigurationInput{}
+				if f18valiter.ImageConfiguration.ImageURI != nil {
+					f18valf0.ImageUri = f18valiter.ImageConfiguration.ImageURI
 				}
-				f19val.ImageConfiguration = f19valf0
+				f18val.ImageConfiguration = f18valf0
 			}
-			f19[f19key] = *f19val
+			f18[f18key] = *f18val
 		}
-		res.WorkerTypeSpecifications = f19
+		res.WorkerTypeSpecifications = f18
 	}
 
 	return res, nil
@@ -737,12 +724,13 @@ func (rm *resourceManager) sdkUpdate(
 	defer func() {
 		exit(err)
 	}()
-
+	desired.SetStatus(latest)
 	if delta.DifferentAt("Spec.Tags") {
-		err := rm.syncTags(
+		arn := string(*latest.ko.Status.ACKResourceMetadata.ARN)
+		err = syncTags(
 			ctx,
-			latest,
-			desired,
+			desired.ko.Spec.Tags, latest.ko.Spec.Tags,
+			&arn, convertToOrderedACKTags, rm.sdkapi, rm.metrics,
 		)
 		if err != nil {
 			return nil, err
@@ -1028,11 +1016,6 @@ func (rm *resourceManager) sdkUpdate(
 	} else {
 		ko.Status.StateDetails = nil
 	}
-	if resp.Application.Tags != nil {
-		ko.Spec.Tags = aws.StringMap(resp.Application.Tags)
-	} else {
-		ko.Spec.Tags = nil
-	}
 	if resp.Application.Type != nil {
 		ko.Spec.Type = resp.Application.Type
 	} else {
@@ -1106,179 +1089,179 @@ func (rm *resourceManager) newUpdateRequestPayload(
 		res.AutoStopConfiguration = f3
 	}
 	if r.ko.Spec.DiskEncryptionConfiguration != nil {
-		f5 := &svcsdktypes.DiskEncryptionConfiguration{}
+		f4 := &svcsdktypes.DiskEncryptionConfiguration{}
 		if r.ko.Spec.DiskEncryptionConfiguration.EncryptionContext != nil {
-			f5.EncryptionContext = aws.ToStringMap(r.ko.Spec.DiskEncryptionConfiguration.EncryptionContext)
+			f4.EncryptionContext = aws.ToStringMap(r.ko.Spec.DiskEncryptionConfiguration.EncryptionContext)
 		}
 		if r.ko.Spec.DiskEncryptionConfiguration.EncryptionKeyARN != nil {
-			f5.EncryptionKeyArn = r.ko.Spec.DiskEncryptionConfiguration.EncryptionKeyARN
+			f4.EncryptionKeyArn = r.ko.Spec.DiskEncryptionConfiguration.EncryptionKeyARN
 		}
-		res.DiskEncryptionConfiguration = f5
+		res.DiskEncryptionConfiguration = f4
 	}
 	if r.ko.Spec.IdentityCenterConfiguration != nil {
-		f6 := &svcsdktypes.IdentityCenterConfigurationInput{}
+		f5 := &svcsdktypes.IdentityCenterConfigurationInput{}
 		if r.ko.Spec.IdentityCenterConfiguration.IdentityCenterInstanceARN != nil {
-			f6.IdentityCenterInstanceArn = r.ko.Spec.IdentityCenterConfiguration.IdentityCenterInstanceARN
+			f5.IdentityCenterInstanceArn = r.ko.Spec.IdentityCenterConfiguration.IdentityCenterInstanceARN
 		}
 		if r.ko.Spec.IdentityCenterConfiguration.UserBackgroundSessionsEnabled != nil {
-			f6.UserBackgroundSessionsEnabled = r.ko.Spec.IdentityCenterConfiguration.UserBackgroundSessionsEnabled
+			f5.UserBackgroundSessionsEnabled = r.ko.Spec.IdentityCenterConfiguration.UserBackgroundSessionsEnabled
 		}
-		res.IdentityCenterConfiguration = f6
+		res.IdentityCenterConfiguration = f5
 	}
 	if r.ko.Spec.ImageConfiguration != nil {
-		f7 := &svcsdktypes.ImageConfigurationInput{}
+		f6 := &svcsdktypes.ImageConfigurationInput{}
 		if r.ko.Spec.ImageConfiguration.ImageURI != nil {
-			f7.ImageUri = r.ko.Spec.ImageConfiguration.ImageURI
+			f6.ImageUri = r.ko.Spec.ImageConfiguration.ImageURI
 		}
-		res.ImageConfiguration = f7
+		res.ImageConfiguration = f6
 	}
 	if r.ko.Spec.InitialCapacity != nil {
-		f8 := map[string]svcsdktypes.InitialCapacityConfig{}
-		for f8key, f8valiter := range r.ko.Spec.InitialCapacity {
-			f8val := &svcsdktypes.InitialCapacityConfig{}
-			if f8valiter.WorkerConfiguration != nil {
-				f8valf0 := &svcsdktypes.WorkerResourceConfig{}
-				if f8valiter.WorkerConfiguration.CPU != nil {
-					f8valf0.Cpu = f8valiter.WorkerConfiguration.CPU
+		f7 := map[string]svcsdktypes.InitialCapacityConfig{}
+		for f7key, f7valiter := range r.ko.Spec.InitialCapacity {
+			f7val := &svcsdktypes.InitialCapacityConfig{}
+			if f7valiter.WorkerConfiguration != nil {
+				f7valf0 := &svcsdktypes.WorkerResourceConfig{}
+				if f7valiter.WorkerConfiguration.CPU != nil {
+					f7valf0.Cpu = f7valiter.WorkerConfiguration.CPU
 				}
-				if f8valiter.WorkerConfiguration.Disk != nil {
-					f8valf0.Disk = f8valiter.WorkerConfiguration.Disk
+				if f7valiter.WorkerConfiguration.Disk != nil {
+					f7valf0.Disk = f7valiter.WorkerConfiguration.Disk
 				}
-				if f8valiter.WorkerConfiguration.DiskType != nil {
-					f8valf0.DiskType = f8valiter.WorkerConfiguration.DiskType
+				if f7valiter.WorkerConfiguration.DiskType != nil {
+					f7valf0.DiskType = f7valiter.WorkerConfiguration.DiskType
 				}
-				if f8valiter.WorkerConfiguration.Memory != nil {
-					f8valf0.Memory = f8valiter.WorkerConfiguration.Memory
+				if f7valiter.WorkerConfiguration.Memory != nil {
+					f7valf0.Memory = f7valiter.WorkerConfiguration.Memory
 				}
-				f8val.WorkerConfiguration = f8valf0
+				f7val.WorkerConfiguration = f7valf0
 			}
-			if f8valiter.WorkerCount != nil {
-				f8val.WorkerCount = f8valiter.WorkerCount
+			if f7valiter.WorkerCount != nil {
+				f7val.WorkerCount = f7valiter.WorkerCount
 			}
-			f8[f8key] = *f8val
+			f7[f7key] = *f7val
 		}
-		res.InitialCapacity = f8
+		res.InitialCapacity = f7
 	}
 	if r.ko.Spec.InteractiveConfiguration != nil {
-		f9 := &svcsdktypes.InteractiveConfiguration{}
+		f8 := &svcsdktypes.InteractiveConfiguration{}
 		if r.ko.Spec.InteractiveConfiguration.LivyEndpointEnabled != nil {
-			f9.LivyEndpointEnabled = r.ko.Spec.InteractiveConfiguration.LivyEndpointEnabled
+			f8.LivyEndpointEnabled = r.ko.Spec.InteractiveConfiguration.LivyEndpointEnabled
 		}
 		if r.ko.Spec.InteractiveConfiguration.StudioEnabled != nil {
-			f9.StudioEnabled = r.ko.Spec.InteractiveConfiguration.StudioEnabled
+			f8.StudioEnabled = r.ko.Spec.InteractiveConfiguration.StudioEnabled
 		}
-		res.InteractiveConfiguration = f9
+		res.InteractiveConfiguration = f8
 	}
 	if r.ko.Spec.JobLevelCostAllocationConfiguration != nil {
-		f10 := &svcsdktypes.JobLevelCostAllocationConfiguration{}
+		f9 := &svcsdktypes.JobLevelCostAllocationConfiguration{}
 		if r.ko.Spec.JobLevelCostAllocationConfiguration.Enabled != nil {
-			f10.Enabled = r.ko.Spec.JobLevelCostAllocationConfiguration.Enabled
+			f9.Enabled = r.ko.Spec.JobLevelCostAllocationConfiguration.Enabled
 		}
-		res.JobLevelCostAllocationConfiguration = f10
+		res.JobLevelCostAllocationConfiguration = f9
 	}
 	if r.ko.Spec.MaximumCapacity != nil {
-		f11 := &svcsdktypes.MaximumAllowedResources{}
+		f10 := &svcsdktypes.MaximumAllowedResources{}
 		if r.ko.Spec.MaximumCapacity.CPU != nil {
-			f11.Cpu = r.ko.Spec.MaximumCapacity.CPU
+			f10.Cpu = r.ko.Spec.MaximumCapacity.CPU
 		}
 		if r.ko.Spec.MaximumCapacity.Disk != nil {
-			f11.Disk = r.ko.Spec.MaximumCapacity.Disk
+			f10.Disk = r.ko.Spec.MaximumCapacity.Disk
 		}
 		if r.ko.Spec.MaximumCapacity.Memory != nil {
-			f11.Memory = r.ko.Spec.MaximumCapacity.Memory
+			f10.Memory = r.ko.Spec.MaximumCapacity.Memory
 		}
-		res.MaximumCapacity = f11
+		res.MaximumCapacity = f10
 	}
 	if r.ko.Spec.MonitoringConfiguration != nil {
-		f12 := &svcsdktypes.MonitoringConfiguration{}
+		f11 := &svcsdktypes.MonitoringConfiguration{}
 		if r.ko.Spec.MonitoringConfiguration.CloudWatchLoggingConfiguration != nil {
-			f12f0 := &svcsdktypes.CloudWatchLoggingConfiguration{}
+			f11f0 := &svcsdktypes.CloudWatchLoggingConfiguration{}
 			if r.ko.Spec.MonitoringConfiguration.CloudWatchLoggingConfiguration.Enabled != nil {
-				f12f0.Enabled = r.ko.Spec.MonitoringConfiguration.CloudWatchLoggingConfiguration.Enabled
+				f11f0.Enabled = r.ko.Spec.MonitoringConfiguration.CloudWatchLoggingConfiguration.Enabled
 			}
 			if r.ko.Spec.MonitoringConfiguration.CloudWatchLoggingConfiguration.EncryptionKeyARN != nil {
-				f12f0.EncryptionKeyArn = r.ko.Spec.MonitoringConfiguration.CloudWatchLoggingConfiguration.EncryptionKeyARN
+				f11f0.EncryptionKeyArn = r.ko.Spec.MonitoringConfiguration.CloudWatchLoggingConfiguration.EncryptionKeyARN
 			}
 			if r.ko.Spec.MonitoringConfiguration.CloudWatchLoggingConfiguration.LogGroupName != nil {
-				f12f0.LogGroupName = r.ko.Spec.MonitoringConfiguration.CloudWatchLoggingConfiguration.LogGroupName
+				f11f0.LogGroupName = r.ko.Spec.MonitoringConfiguration.CloudWatchLoggingConfiguration.LogGroupName
 			}
 			if r.ko.Spec.MonitoringConfiguration.CloudWatchLoggingConfiguration.LogStreamNamePrefix != nil {
-				f12f0.LogStreamNamePrefix = r.ko.Spec.MonitoringConfiguration.CloudWatchLoggingConfiguration.LogStreamNamePrefix
+				f11f0.LogStreamNamePrefix = r.ko.Spec.MonitoringConfiguration.CloudWatchLoggingConfiguration.LogStreamNamePrefix
 			}
 			if r.ko.Spec.MonitoringConfiguration.CloudWatchLoggingConfiguration.LogTypes != nil {
-				f12f0f4 := map[string][]string{}
-				for f12f0f4key, f12f0f4valiter := range r.ko.Spec.MonitoringConfiguration.CloudWatchLoggingConfiguration.LogTypes {
-					f12f0f4[f12f0f4key] = aws.ToStringSlice(f12f0f4valiter)
+				f11f0f4 := map[string][]string{}
+				for f11f0f4key, f11f0f4valiter := range r.ko.Spec.MonitoringConfiguration.CloudWatchLoggingConfiguration.LogTypes {
+					f11f0f4[f11f0f4key] = aws.ToStringSlice(f11f0f4valiter)
 				}
-				f12f0.LogTypes = f12f0f4
+				f11f0.LogTypes = f11f0f4
 			}
-			f12.CloudWatchLoggingConfiguration = f12f0
+			f11.CloudWatchLoggingConfiguration = f11f0
 		}
 		if r.ko.Spec.MonitoringConfiguration.ManagedPersistenceMonitoringConfiguration != nil {
-			f12f1 := &svcsdktypes.ManagedPersistenceMonitoringConfiguration{}
+			f11f1 := &svcsdktypes.ManagedPersistenceMonitoringConfiguration{}
 			if r.ko.Spec.MonitoringConfiguration.ManagedPersistenceMonitoringConfiguration.Enabled != nil {
-				f12f1.Enabled = r.ko.Spec.MonitoringConfiguration.ManagedPersistenceMonitoringConfiguration.Enabled
+				f11f1.Enabled = r.ko.Spec.MonitoringConfiguration.ManagedPersistenceMonitoringConfiguration.Enabled
 			}
 			if r.ko.Spec.MonitoringConfiguration.ManagedPersistenceMonitoringConfiguration.EncryptionKeyARN != nil {
-				f12f1.EncryptionKeyArn = r.ko.Spec.MonitoringConfiguration.ManagedPersistenceMonitoringConfiguration.EncryptionKeyARN
+				f11f1.EncryptionKeyArn = r.ko.Spec.MonitoringConfiguration.ManagedPersistenceMonitoringConfiguration.EncryptionKeyARN
 			}
-			f12.ManagedPersistenceMonitoringConfiguration = f12f1
+			f11.ManagedPersistenceMonitoringConfiguration = f11f1
 		}
 		if r.ko.Spec.MonitoringConfiguration.PrometheusMonitoringConfiguration != nil {
-			f12f2 := &svcsdktypes.PrometheusMonitoringConfiguration{}
+			f11f2 := &svcsdktypes.PrometheusMonitoringConfiguration{}
 			if r.ko.Spec.MonitoringConfiguration.PrometheusMonitoringConfiguration.RemoteWriteURL != nil {
-				f12f2.RemoteWriteUrl = r.ko.Spec.MonitoringConfiguration.PrometheusMonitoringConfiguration.RemoteWriteURL
+				f11f2.RemoteWriteUrl = r.ko.Spec.MonitoringConfiguration.PrometheusMonitoringConfiguration.RemoteWriteURL
 			}
-			f12.PrometheusMonitoringConfiguration = f12f2
+			f11.PrometheusMonitoringConfiguration = f11f2
 		}
 		if r.ko.Spec.MonitoringConfiguration.S3MonitoringConfiguration != nil {
-			f12f3 := &svcsdktypes.S3MonitoringConfiguration{}
+			f11f3 := &svcsdktypes.S3MonitoringConfiguration{}
 			if r.ko.Spec.MonitoringConfiguration.S3MonitoringConfiguration.EncryptionKeyARN != nil {
-				f12f3.EncryptionKeyArn = r.ko.Spec.MonitoringConfiguration.S3MonitoringConfiguration.EncryptionKeyARN
+				f11f3.EncryptionKeyArn = r.ko.Spec.MonitoringConfiguration.S3MonitoringConfiguration.EncryptionKeyARN
 			}
 			if r.ko.Spec.MonitoringConfiguration.S3MonitoringConfiguration.LogURI != nil {
-				f12f3.LogUri = r.ko.Spec.MonitoringConfiguration.S3MonitoringConfiguration.LogURI
+				f11f3.LogUri = r.ko.Spec.MonitoringConfiguration.S3MonitoringConfiguration.LogURI
 			}
-			f12.S3MonitoringConfiguration = f12f3
+			f11.S3MonitoringConfiguration = f11f3
 		}
-		res.MonitoringConfiguration = f12
+		res.MonitoringConfiguration = f11
 	}
 	if r.ko.Spec.NetworkConfiguration != nil {
-		f13 := &svcsdktypes.NetworkConfiguration{}
+		f12 := &svcsdktypes.NetworkConfiguration{}
 		if r.ko.Spec.NetworkConfiguration.SecurityGroupIDs != nil {
-			f13.SecurityGroupIds = aws.ToStringSlice(r.ko.Spec.NetworkConfiguration.SecurityGroupIDs)
+			f12.SecurityGroupIds = aws.ToStringSlice(r.ko.Spec.NetworkConfiguration.SecurityGroupIDs)
 		}
 		if r.ko.Spec.NetworkConfiguration.SubnetIDs != nil {
-			f13.SubnetIds = aws.ToStringSlice(r.ko.Spec.NetworkConfiguration.SubnetIDs)
+			f12.SubnetIds = aws.ToStringSlice(r.ko.Spec.NetworkConfiguration.SubnetIDs)
 		}
-		res.NetworkConfiguration = f13
+		res.NetworkConfiguration = f12
 	}
 	if r.ko.Spec.ReleaseLabel != nil {
 		res.ReleaseLabel = r.ko.Spec.ReleaseLabel
 	}
 	if r.ko.Spec.RuntimeConfiguration != nil {
-		f15 := []svcsdktypes.Configuration{}
-		for _, f15iter := range r.ko.Spec.RuntimeConfiguration {
-			f15elem := &svcsdktypes.Configuration{}
-			if f15iter.Classification != nil {
-				f15elem.Classification = f15iter.Classification
+		f14 := []svcsdktypes.Configuration{}
+		for _, f14iter := range r.ko.Spec.RuntimeConfiguration {
+			f14elem := &svcsdktypes.Configuration{}
+			if f14iter.Classification != nil {
+				f14elem.Classification = f14iter.Classification
 			}
-			if f15iter.Properties != nil {
-				f15elem.Properties = aws.ToStringMap(f15iter.Properties)
+			if f14iter.Properties != nil {
+				f14elem.Properties = aws.ToStringMap(f14iter.Properties)
 			}
-			f15 = append(f15, *f15elem)
+			f14 = append(f14, *f14elem)
 		}
-		res.RuntimeConfiguration = f15
+		res.RuntimeConfiguration = f14
 	}
 	if r.ko.Spec.SchedulerConfiguration != nil {
-		f16 := &svcsdktypes.SchedulerConfiguration{}
+		f15 := &svcsdktypes.SchedulerConfiguration{}
 		if r.ko.Spec.SchedulerConfiguration.MaxConcurrentRuns != nil {
 			maxConcurrentRunsCopy0 := *r.ko.Spec.SchedulerConfiguration.MaxConcurrentRuns
 			if maxConcurrentRunsCopy0 > math.MaxInt32 || maxConcurrentRunsCopy0 < math.MinInt32 {
 				return nil, fmt.Errorf("error: field maxConcurrentRuns is of type int32")
 			}
 			maxConcurrentRunsCopy := int32(maxConcurrentRunsCopy0)
-			f16.MaxConcurrentRuns = &maxConcurrentRunsCopy
+			f15.MaxConcurrentRuns = &maxConcurrentRunsCopy
 		}
 		if r.ko.Spec.SchedulerConfiguration.QueueTimeoutMinutes != nil {
 			queueTimeoutMinutesCopy0 := *r.ko.Spec.SchedulerConfiguration.QueueTimeoutMinutes
@@ -1286,24 +1269,24 @@ func (rm *resourceManager) newUpdateRequestPayload(
 				return nil, fmt.Errorf("error: field queueTimeoutMinutes is of type int32")
 			}
 			queueTimeoutMinutesCopy := int32(queueTimeoutMinutesCopy0)
-			f16.QueueTimeoutMinutes = &queueTimeoutMinutesCopy
+			f15.QueueTimeoutMinutes = &queueTimeoutMinutesCopy
 		}
-		res.SchedulerConfiguration = f16
+		res.SchedulerConfiguration = f15
 	}
 	if r.ko.Spec.WorkerTypeSpecifications != nil {
-		f17 := map[string]svcsdktypes.WorkerTypeSpecificationInput{}
-		for f17key, f17valiter := range r.ko.Spec.WorkerTypeSpecifications {
-			f17val := &svcsdktypes.WorkerTypeSpecificationInput{}
-			if f17valiter.ImageConfiguration != nil {
-				f17valf0 := &svcsdktypes.ImageConfigurationInput{}
-				if f17valiter.ImageConfiguration.ImageURI != nil {
-					f17valf0.ImageUri = f17valiter.ImageConfiguration.ImageURI
+		f16 := map[string]svcsdktypes.WorkerTypeSpecificationInput{}
+		for f16key, f16valiter := range r.ko.Spec.WorkerTypeSpecifications {
+			f16val := &svcsdktypes.WorkerTypeSpecificationInput{}
+			if f16valiter.ImageConfiguration != nil {
+				f16valf0 := &svcsdktypes.ImageConfigurationInput{}
+				if f16valiter.ImageConfiguration.ImageURI != nil {
+					f16valf0.ImageUri = f16valiter.ImageConfiguration.ImageURI
 				}
-				f17val.ImageConfiguration = f17valf0
+				f16val.ImageConfiguration = f16valf0
 			}
-			f17[f17key] = *f17val
+			f16[f16key] = *f16val
 		}
-		res.WorkerTypeSpecifications = f17
+		res.WorkerTypeSpecifications = f16
 	}
 
 	return res, nil
