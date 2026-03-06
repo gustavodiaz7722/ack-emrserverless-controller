@@ -32,6 +32,11 @@ MODIFY_WAIT_AFTER_SECONDS = 10
 DELETE_WAIT_AFTER_SECONDS = 30
 
 
+INITIAL_TAGS = {
+    "environment": "test",
+    "team": "data-platform",
+}
+
 def _create_application(resource_name: str, application_type: str = "SPARK"):
     """Helper to create an Application CR and return (ref, cr)."""
     replacements = REPLACEMENT_VALUES.copy()
@@ -44,6 +49,8 @@ def _create_application(resource_name: str, application_type: str = "SPARK"):
         "application",
         additional_replacements=replacements,
     )
+
+    resource_data["spec"]["tags"] = INITIAL_TAGS
     
     ref = k8s.CustomResourceReference(
         CRD_GROUP, CRD_VERSION, RESOURCE_PLURAL,
@@ -193,13 +200,18 @@ class TestApplication:
         cr = k8s.get_resource(ref)
         application_arn = cr["status"]["ackResourceMetadata"]["arn"]
         
-        # Test 1: Add tags via patch
+        # Test 1: Verify initial tags from creation
+        response = emrserverless_client.list_tags_for_resource(resourceArn=application_arn)
+        initial_tags = response["tags"]
+        
+        tags.assert_ack_system_tags(tags=initial_tags)
+        tags.assert_equal_without_ack_tags(expected=INITIAL_TAGS, actual=initial_tags)
+        
+        # Test 2: Update tags via patch
+        updated_tags = {"environment": "staging", "team": "data-platform", "new-tag" : "new-tag-value"}
         updates = {
             "spec": {
-                "tags": {
-                    "environment": "staging",
-                    "team": "data-platform"
-                }
+                "tags": updated_tags
             }
         }
         
@@ -211,23 +223,17 @@ class TestApplication:
         response = emrserverless_client.list_tags_for_resource(resourceArn=application_arn)
         latest_tags = response["tags"]
         
-        # Verify tags were added (note: EMR Serverless uses map[string]string for tags)
-        assert "environment" in latest_tags
-        assert latest_tags["environment"] == "staging"
-        assert "team" in latest_tags
-        assert latest_tags["team"] == "data-platform"
+        tags.assert_ack_system_tags(tags=latest_tags)
+        tags.assert_equal_without_ack_tags(expected=updated_tags, actual=latest_tags)
         
-        # Test 2: Update tag value
-        updates = {
-            "spec": {
-                "tags": {
-                    "environment": "production",
-                    "team": "data-platform"
-                }
-            }
-        }
-        
-        k8s.patch_custom_resource(ref, updates)
+        # Test 3: Remove a tag key by using replace instead of patch.
+        # Kubernetes strategic/JSON merge patch on a map only adds/updates
+        # keys — it never removes missing keys. To delete "new-tag" we must
+        # replace the full resource so the tags map is set exactly.
+        updated_tags = {"environment": "production", "team": "data-platform"}
+        cr = k8s.get_resource(ref)
+        cr["spec"]["tags"] = updated_tags
+        k8s.replace_custom_resource(ref, cr)
         time.sleep(MODIFY_WAIT_AFTER_SECONDS)
         
         assert k8s.wait_on_condition(ref, "ACK.ResourceSynced", "True", wait_periods=10)
@@ -235,18 +241,13 @@ class TestApplication:
         response = emrserverless_client.list_tags_for_resource(resourceArn=application_arn)
         latest_tags = response["tags"]
         
-        assert latest_tags["environment"] == "production"
+        tags.assert_ack_system_tags(tags=latest_tags)
+        tags.assert_equal_without_ack_tags(expected=updated_tags, actual=latest_tags)
         
-        # Test 3: Remove user tags by setting to null
-        # Note: Using None (null) instead of {} because Kubernetes strategic merge patch
-        # merges empty maps with existing values instead of replacing them
-        updates = {
-            "spec": {
-                "tags": None
-            }
-        }
-        
-        k8s.patch_custom_resource(ref, updates)
+        # Test 4: Remove all user tags
+        cr = k8s.get_resource(ref)
+        cr["spec"]["tags"] = {}
+        k8s.replace_custom_resource(ref, cr)
         time.sleep(MODIFY_WAIT_AFTER_SECONDS)
         
         assert k8s.wait_on_condition(ref, "ACK.ResourceSynced", "True", wait_periods=10)
@@ -254,9 +255,8 @@ class TestApplication:
         response = emrserverless_client.list_tags_for_resource(resourceArn=application_arn)
         latest_tags = response["tags"]
         
-        # User tags should be removed (ACK system tags may remain)
-        user_tags = {k: v for k, v in latest_tags.items() if not k.startswith("services.k8s.aws/")}
-        assert len(user_tags) == 0 or "environment" not in user_tags
+        tags.assert_ack_system_tags(tags=latest_tags)
+        tags.assert_equal_without_ack_tags(expected={}, actual=latest_tags)
 
     def test_delete(self, emrserverless_client):
         """Test that deleting the K8s resource deletes the AWS Application."""
